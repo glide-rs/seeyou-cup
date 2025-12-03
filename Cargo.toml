@@ -3,7 +3,7 @@ name = "seeyou-cup"
 version = "0.3.0"
 description = "A Rust library for parsing and writing SeeYou CUP files, commonly used in aviation and gliding for waypoint and task data"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Turbo87/seeyou-cup-rs"
+repository = "https://github.com/glide-rs/seeyou-cup"
 edition = "2024"
 exclude = [".github/*", "docs/*", "examples/*", "proptest-regressions/*", "tests/*", ".gitignore"]
 
