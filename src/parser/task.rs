@@ -71,12 +71,7 @@ fn parse_task_line(record: &StringRecord) -> Result<Task, Error> {
         Some(record.get(0).unwrap().to_string())
     };
 
-    let waypoint_names = record
-        .iter()
-        .skip(1)
-        .filter(|s| !s.is_empty())
-        .map(|s| s.to_string())
-        .collect();
+    let waypoint_names = record.iter().skip(1).map(|s| s.to_string()).collect();
 
     Ok(Task {
         description,
