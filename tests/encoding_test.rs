@@ -1,7 +1,7 @@
 use claims::assert_ok;
 use insta::assert_snapshot;
-use seeyou_cup::Encoding::{self, Utf8, Windows1252};
 use seeyou_cup::CupFile;
+use seeyou_cup::Encoding::{self, Utf8, Windows1252};
 use std::path::{Path, PathBuf};
 
 const FIXTURES: [(&str, Encoding); 4] = [

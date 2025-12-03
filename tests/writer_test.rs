@@ -1,8 +1,8 @@
 use claims::{assert_ok, assert_some_eq};
 use insta::assert_snapshot;
 use seeyou_cup::{
-    Encoding, CupFile, Distance, Elevation, ObsZoneStyle, ObservationZone, RunwayDimension,
-    Task, TaskOptions, Waypoint, WaypointStyle,
+    CupFile, Distance, Elevation, Encoding, ObsZoneStyle, ObservationZone, RunwayDimension, Task,
+    TaskOptions, Waypoint, WaypointStyle,
 };
 use std::io::Cursor;
 
