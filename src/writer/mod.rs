@@ -2,8 +2,8 @@ mod basics;
 mod task;
 mod waypoint;
 
-use crate::Encoding;
 use crate::CupFile;
+use crate::Encoding;
 use crate::error::Error;
 use crate::writer::task::format_task;
 use crate::writer::waypoint::write_waypoint;
@@ -11,11 +11,7 @@ use csv::Writer;
 use encoding_rs::{Encoding as EncodingImpl, UTF_8, WINDOWS_1252};
 use std::io::Write;
 
-pub fn write<W: Write>(
-    cup_file: &CupFile,
-    mut writer: W,
-    encoding: Encoding,
-) -> Result<(), Error> {
+pub fn write<W: Write>(cup_file: &CupFile, mut writer: W, encoding: Encoding) -> Result<(), Error> {
     let content = format_cup_file(cup_file)?;
 
     let encoding_impl: &'static EncodingImpl = match encoding {
