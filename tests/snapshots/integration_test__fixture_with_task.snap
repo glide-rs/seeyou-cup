@@ -83,11 +83,13 @@ CupFile {
                 "709 km · Dreieck · DMSt · Aachen Stolberg TV_282915",
             ),
             waypoint_names: [
+                "",
                 "Aachen Stolberg TV",
                 "Wendepunkt",
                 "Helmstadter Berg",
                 "Linnich Station",
                 "Aachen Stolberg TV",
+                "",
             ],
             options: Some(
                 TaskOptions {
