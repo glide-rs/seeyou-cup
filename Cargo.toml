@@ -15,7 +15,7 @@ thiserror = "2.0.17"
 [dev-dependencies]
 claims = "=0.8.0"
 insta = "=1.43.2"
-proptest = "=1.8.0"
+proptest = "=1.11.0"
 
 [package.metadata.release]
 pre-release-commit-message = "Release v{{version}}"
