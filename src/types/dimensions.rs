@@ -39,7 +39,7 @@ macro_rules! dimension_enum {
                     }
                 )*
 
-                if let Some(unit_start) = s.chars().position(|c| c.is_alphabetic()) {
+                if let Some(unit_start) = s.find(char::is_alphabetic) {
                     let unit = &s[unit_start..];
                     return Err(format!("Invalid {} unit: '{unit}'", $display_name));
                 }

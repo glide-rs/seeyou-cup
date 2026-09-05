@@ -66,7 +66,7 @@ pub fn parse_longitude(s: &str) -> Result<f64, String> {
         ));
     }
 
-    let degrees: u8 = s[0..3].parse().unwrap();
+    let degrees: u16 = s[0..3].parse().unwrap();
     let minutes: f64 = s[3..bytes_len - 1].parse().unwrap();
     if !(0.0..60.0).contains(&minutes) {
         return Err(format!(
@@ -154,6 +154,16 @@ mod tests {
     #[test]
     fn test_longitude_proptest() {
         proptest!(|(s in "\\PC*")| { let _ = parse_longitude(&s); });
+    }
+
+    #[test]
+    fn test_longitude_numeric_proptest() {
+        proptest!(|(degrees in 0u16..1000, minutes in 0u32..100_000, hemisphere in "[EW]")| {
+            let input = format!("{degrees:03}{:02}.{:03}{hemisphere}", minutes / 1000, minutes % 1000);
+            let result = parse_longitude(&input);
+            let valid = (degrees < 180 && minutes < 60_000) || (degrees == 180 && minutes == 0);
+            proptest::prop_assert_eq!(result.is_ok(), valid);
+        });
     }
 
     #[test]

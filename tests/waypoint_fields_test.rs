@@ -291,6 +291,27 @@ fn test_longitude_180_degrees_west() {
 }
 
 #[test]
+fn test_longitude_degree_overflow() {
+    for longitude in ["25500.000E", "25600.000E", "99900.000W"] {
+        let input = format!(
+            "name,code,country,lat,lon,elev,style\n\
+             Invalid,,,0000.000N,{longitude},0m,1\n\
+             Valid,,,0000.000N,18000.000E,0m,1\n"
+        );
+        let (cup, warnings) = assert_ok!(CupFile::from_str(&input));
+        assert_eq!(cup.waypoints.len(), 1);
+        assert_eq!(cup.waypoints[0].name, "Valid");
+        assert_eq!(warnings.len(), 1);
+        assert_eq!(warnings[0].line(), Some(2));
+        assert!(
+            warnings[0]
+                .message()
+                .starts_with("Skipped waypoint: Longitude out of range:")
+        );
+    }
+}
+
+#[test]
 fn test_elevation_no_unit_defaults_to_meters() {
     let input = r#"name,code,country,lat,lon,elev,style
 "Test",T,XX,5147.809N,00405.003W,500,1
@@ -330,6 +351,27 @@ fn test_invalid_elevation_unit() {
     assert_eq!(cup.waypoints.len(), 0);
     assert_eq!(warnings.len(), 1);
     insta::assert_compact_debug_snapshot!(warnings, @r#"[Warning(ParseIssue { message: "Skipped waypoint: Invalid elevation: '500km'", line: Some(2) })]"#);
+}
+
+#[test]
+fn test_unicode_dimension_warnings() {
+    let input = "name,code,country,lat,lon,elev,style,rwlen,rwwidth\n\
+                 Invalid,,,0000.000N,00000.000E,°x,1,,\n\
+                 Valid,,,0000.000N,00000.000E,0m,1,°x,°x\n";
+    let (cup, warnings) = assert_ok!(CupFile::from_str(input));
+    assert_eq!(cup.waypoints.len(), 1);
+    assert_eq!(cup.waypoints[0].name, "Valid");
+    assert_eq!(cup.waypoints[0].runway_length, None);
+    assert_eq!(cup.waypoints[0].runway_width, None);
+    let warnings: Vec<_> = warnings.iter().map(|w| (w.line(), w.message())).collect();
+    assert_eq!(
+        warnings,
+        [
+            (Some(2), "Skipped waypoint: Invalid elevation unit: 'x'"),
+            (Some(3), "Ignored field: Invalid runway dimension unit: 'x'"),
+            (Some(3), "Ignored field: Invalid runway dimension unit: 'x'"),
+        ]
+    );
 }
 
 #[test]
