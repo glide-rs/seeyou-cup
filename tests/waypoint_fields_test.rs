@@ -291,6 +291,27 @@ fn test_longitude_180_degrees_west() {
 }
 
 #[test]
+fn test_longitude_degree_overflow() {
+    for longitude in ["25500.000E", "25600.000E", "99900.000W"] {
+        let input = format!(
+            "name,code,country,lat,lon,elev,style\n\
+             Invalid,,,0000.000N,{longitude},0m,1\n\
+             Valid,,,0000.000N,18000.000E,0m,1\n"
+        );
+        let (cup, warnings) = assert_ok!(CupFile::from_str(&input));
+        assert_eq!(cup.waypoints.len(), 1);
+        assert_eq!(cup.waypoints[0].name, "Valid");
+        assert_eq!(warnings.len(), 1);
+        assert_eq!(warnings[0].line(), Some(2));
+        assert!(
+            warnings[0]
+                .message()
+                .starts_with("Skipped waypoint: Longitude out of range:")
+        );
+    }
+}
+
+#[test]
 fn test_elevation_no_unit_defaults_to_meters() {
     let input = r#"name,code,country,lat,lon,elev,style
 "Test",T,XX,5147.809N,00405.003W,500,1
